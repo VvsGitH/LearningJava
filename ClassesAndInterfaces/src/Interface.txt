@@ -1,0 +1,12 @@
+INTERFACCIA
+
+Le interfacce in Java non sono classi, infatti non estendono la
+classe Object. Le interfacce sono una struttura in cui vengono
+definiti solo costanti statiche pubbliche e metodi astratti pubblici non-statici.
+
+Una classe può implementare una o più interfacce e deve implementare
+tutti i loro metodi.
+
+Una classe astratta rappresenta un concetto astratto o il core di qualcosa,
+mentre le interfacce sono dei template, delle guide per uniformare lo
+sviluppo di classi e features.

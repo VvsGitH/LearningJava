@@ -1,0 +1,11 @@
+CLASSE ASTRATTA
+
+La classe astratta è una classe che viene definita abstract
+e che non può essere istanziata.
+
+All’interno di una classe astratta possono essere presenti metodi 
+abstract, cioè metodi senza corpo in cui è presente solo il tipo 
+di ritorno e la sua firma.
+
+Una classe astratta può avere anche metodo non astratti.
+Solo le classi astratte possono contenere metodi astratti.

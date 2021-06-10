@@ -116,17 +116,23 @@ public class Queue {
 		return orderedQueue;
 	}
 
-	public void print() {
+	@Override
+	public String toString() {
 		if (head == -1)
-			System.out.println("[]");
+			return "[]";
 		
 		else {
 			int[] orderedQueue = getOrderedQueue();
-			System.out.print("[ ");
+			String str = "[ ";
 			for (int elm : orderedQueue) {
-				System.out.print(elm + " ");
+				str += (elm + " ");
 			}
-			System.out.println("]");
+			str += "]";
+			return str;
 		}
+	}
+
+	public void print() {
+		System.out.println(this);
 	}
 }

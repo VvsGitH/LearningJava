@@ -64,6 +64,9 @@ public class ArrayList<T> {
 			}
 			arr[indx] = elm;
 
+			// Updating length
+			length++;
+
 		} else {
 			// There is no space left: create a new array
 			T[] newArr = (T[]) new Object[capacity + 1];
@@ -83,10 +86,8 @@ public class ArrayList<T> {
 
 			// Updating capacity and length
 			capacity++;
+			length++;
 		}
-
-		// Updating length
-		length++;
 	}
 
 	public T remove(int indx) throws IndexOutOfBoundsException {
@@ -124,11 +125,17 @@ public class ArrayList<T> {
 		return arr[indx];
 	}
 
-	public void print() {
-		System.out.print("[ ");
+	@Override
+	public String toString() {
+		String str = "[ ";
 		for (int i = 0; i < length; i++) {
-			System.out.print(arr[i] + " ");
+			str += (arr[i] + " ");
 		}
-		System.out.println("]");
+		str += "]";
+		return str;
+	}
+
+	public void print() {
+		System.out.println(this);
 	}
 }

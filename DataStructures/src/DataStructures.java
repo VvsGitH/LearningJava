@@ -1,6 +1,7 @@
 public class DataStructures {
 
 	public static void main(String[] args) {
+
 		System.out.println("------ ARRAYS ------");
 		ArrayStudy.tutorial();
 
@@ -18,5 +19,8 @@ public class DataStructures {
 		SetStudy.hashSetTutorial();
 		System.out.println("------ TREE SET ------");
 		SetStudy.treeSetTutorial();
+		
+		System.out.println("------ HASH MAP ------");
+		MapStudy.hashMapTutorial();
 	}
 }

@@ -4,17 +4,17 @@ import java.time.Year;
 
 abstract class Persona {
 	protected String nome;
-	protected int anzianità;
+	protected int anzianita;
 
 	public Persona(String nome) {
 		this.nome = nome;
 	}
 
 	public void print() {
-		System.out.printf("%s: %d\n", nome, anzianità);
+		System.out.printf("%s: %d\n", nome, anzianita);
 	}
 
-	abstract public int calcAnzianità();
+	abstract public int calcAnzianita();
 }
 
 class Impiegato extends Persona {
@@ -23,10 +23,10 @@ class Impiegato extends Persona {
 	public Impiegato(String nome, int annoAssunzione) {
 		super(nome);
 		this.annoAssunzione = annoAssunzione;
-		this.anzianità = calcAnzianità();
+		this.anzianita = calcAnzianita();
 	}
 
-	public int calcAnzianità() {
+	public int calcAnzianita() {
 		return Year.now().getValue() - annoAssunzione;
 	}
 }
@@ -37,10 +37,10 @@ class Straniero extends Persona {
 	public Straniero(String nome, int annoImmigrazione) {
 		super(nome);
 		this.annoImmigrazione = annoImmigrazione;
-		this.anzianità = calcAnzianità();
+		this.anzianita = calcAnzianita();
 	}
 
-	public int calcAnzianità() {
+	public int calcAnzianita() {
 		return Year.now().getValue() - annoImmigrazione;
 	}
 }
@@ -51,10 +51,10 @@ class Pensionato extends Persona {
 	public Pensionato(String nome, int annoPensionamento) {
 		super(nome);
 		this.annoPensionamento = annoPensionamento;
-		this.anzianità = calcAnzianità();
+		this.anzianita = calcAnzianita();
 	}
 
-	public int calcAnzianità() {
+	public int calcAnzianita() {
 		return Year.now().getValue() - annoPensionamento;
 	}
 }

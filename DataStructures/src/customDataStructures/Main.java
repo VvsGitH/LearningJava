@@ -27,13 +27,13 @@ public class Main {
 	}
 
 	public static void queueDemo() {
-		Queue queue = new Queue(4);
+		Queue<String> queue = new Queue<String>(4);
 
-		queue.push(0);
-		queue.push(1);
-		queue.push(2);
-		queue.push(3);
-		queue.push(4);
+		queue.push("Hi");
+		queue.push("Hello");
+		queue.push("Ciao");
+		queue.push("Salve");
+		queue.push("Buongiorno");
 
 		queue.print();
 
@@ -42,9 +42,9 @@ public class Main {
 
 		queue.print();
 
-		queue.push(4);
-		queue.push(5);
-		queue.push(6);
+		queue.push("We");
+		queue.push("Weila");
+		queue.push("Saluti");
 
 		queue.print();
 
@@ -61,8 +61,8 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		arrayListDemo();
-		// queueDemo();
+		//arrayListDemo();
+		queueDemo();
 	}
 
 }

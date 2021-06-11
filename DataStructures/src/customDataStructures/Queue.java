@@ -1,7 +1,10 @@
 package customDataStructures;
 
-public class Queue {
-	private int[] queue;
+import java.util.Arrays;
+
+@SuppressWarnings("unchecked")
+public class Queue<T> {
+	private T[] queue;
 	private int size;
 
 	private int head; // Indx of the oldest element
@@ -11,13 +14,13 @@ public class Queue {
 	private final String FULL_MSG = "The queue is full!";
 
 	public Queue(int size) {
-		queue = new int[size];
+		queue = (T[]) new Object[size];
 		this.size = size;
 
 		head = tail = -1;
 	}
 
-	public void push(int elm) {
+	public void push(T elm) {
 		// Move the tail
 		if (head == -1) {
 			// The queue is empty
@@ -47,14 +50,14 @@ public class Queue {
 		queue[tail] = elm;
 	}
 
-	public int pop() {
+	public T pop() {
 		if (head == -1) {
 			// The queue is empty
 			System.out.println(EMPTY_MSG);
-			return -1;
+			return null;
 		}
 
-		int popped = queue[head];
+		T popped = queue[head];
 
 		// Move the head
 		if (head == tail)
@@ -70,8 +73,8 @@ public class Queue {
 		return popped;
 	}
 
-	public int[] getOrderedQueue() {
-		int[] orderedQueue = new int[size];
+	public T[] getOrderedQueue() {
+		T[] orderedQueue = (T[]) new Object[size];
 
 		// Queue example
 		// [elm tail _ head elm elm elm ]
@@ -106,7 +109,7 @@ public class Queue {
 		// Create a new vector with the correct dimension
 		// [head elm elm elm elm tail _] -> [head elm elm elm elm tail]
 		if (j < size) {
-			int[] reduced = new int[j];
+			T[] reduced = (T[]) new Object[j];
 			for (int i = 0; i < j; i++) {
 				reduced[i] = orderedQueue[i];
 			}
@@ -115,6 +118,10 @@ public class Queue {
 
 		return orderedQueue;
 	}
+	
+	public void print() {
+		System.out.println(this);
+	}
 
 	@Override
 	public String toString() {
@@ -122,17 +129,57 @@ public class Queue {
 			return "[]";
 		
 		else {
-			int[] orderedQueue = getOrderedQueue();
+			T[] orderedQueue = getOrderedQueue();
 			String str = "[ ";
-			for (int elm : orderedQueue) {
+			for (T elm : orderedQueue) {
 				str += (elm + " ");
 			}
 			str += "]";
 			return str;
 		}
 	}
-
-	public void print() {
-		System.out.println(this);
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+	
+		if (o == null || !getClass().equals(o.getClass()))
+			return false;
+		
+		Queue<T> q = (Queue<T>) o;
+		
+		if (size != q.size || head != q.head || tail != q.tail)
+			return false;
+		
+		for (int i = 0; i < size; i++) {
+			if (queue[i] != q.queue[i])
+				return false;
+		}
+		return true;
 	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 5*hash + size;
+		hash = 5*hash + head;
+		hash = 5*hash + tail;
+		hash = 5*hash + Arrays.deepHashCode(queue);
+		return hash;
+	}
+	
+	@Override
+	public Object clone() {
+		try {
+			Queue<T> q = (Queue<T>) super.clone();
+			
+			q.queue = queue.clone();
+			
+			return q;
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError(e.toString());
+		}
+	}
+
 }

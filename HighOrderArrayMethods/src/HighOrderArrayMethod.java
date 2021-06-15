@@ -1,14 +1,22 @@
 import java.util.Arrays;
 
-interface forEachOperator<T> {
+@FunctionalInterface
+interface Consumer<T> {
 	void run(T elm);
 }
 
-interface mapOperator<T> {
+@FunctionalInterface
+interface Operator<T> {
 	T run(T elm);
 }
 
-interface filterOperator<T> {
+@FunctionalInterface
+interface BinaryOperator<T> {
+	T run(T accumulator, T elm);
+}
+
+@FunctionalInterface
+interface Predicate<T> {
 	boolean run(T elm);
 }
 
@@ -18,13 +26,19 @@ class MyArray {
 		this.arr = arr.clone();
 	}
 	
-	public void forEach(forEachOperator<Integer> lambda) {
+	public void forEach(Consumer<Integer> lambda) {
 		for(int i = 0; i < arr.length; i++) {
 			lambda.run(arr[i]);
 		}
 	}
 	
-	public int[] map(mapOperator<Integer> lambda) {
+	public void forEach(Operator<Integer> lambda) {
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = lambda.run(arr[i]);
+		}
+	}
+
+	public int[] map(Operator<Integer> lambda) {
 		int[] newArr = new int[arr.length];
 		
 		for(int i = 0; i < arr.length; i++) 
@@ -33,7 +47,7 @@ class MyArray {
 		return newArr;
 	}
 	
-	public int[] filter(filterOperator<Integer> lambda) {
+	public int[] filter(Predicate<Integer> lambda) {
 		int[] newArr = new int[arr.length];
 		
 		int j = 0;
@@ -45,6 +59,14 @@ class MyArray {
 		}
 		
 		return Arrays.copyOf(newArr, j);
+	}
+
+	public int reduce(BinaryOperator<Integer> lambda, int initial) {
+		for (int i = 0; i < arr.length; i++) {
+			initial = lambda.run(initial, arr[i]);
+		}
+
+		return initial;
 	}
 }
 
@@ -58,18 +80,25 @@ public class HighOrderArrayMethod {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		MyArray arr = new MyArray(new int[] {1,2,3,4,5});
 		
 		System.out.print("[ ");
-		arr.forEach(elm -> System.out.print(elm + " "));
+		arr.forEach(elm -> {
+			System.out.print(elm + " ");
+		});
 		System.out.println("]");
 		
+		arr.forEach(elm -> elm + 1);
+		print(arr.arr);
+
 		int[] mappedArray = arr.map(elm -> 2*elm);
 		print(mappedArray);
 		
-		int[] filteredArray = arr.filter(elm -> elm > 2);
+		int[] filteredArray = arr.filter(elm -> elm > 3);
 		print(filteredArray);
+
+		int sum = arr.reduce((acc, elm) -> acc + elm, 0);
+		System.out.println(sum);
 	}
 
 }

@@ -1,11 +1,11 @@
 package customDataStructures;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
-@SuppressWarnings("unchecked")
-public class Queue<T> {
-	private T[] queue;
-	private int size;
+public class Queue<T> implements Collection<T> {
+	private Object[] queue;
+	private int capacity;
 
 	private int head; // Indx of the oldest element
 	private int tail; // Indx of the newest element
@@ -13,21 +13,45 @@ public class Queue<T> {
 	private final String EMPTY_MSG = "The queue is empty!";
 	private final String FULL_MSG = "The queue is full!";
 
-	public Queue(int size) {
-		queue = (T[]) new Object[size];
-		this.size = size;
+	// CONSTRUCTOR
+
+	public Queue(int capacity) {
+		queue = new Object[capacity];
+		this.capacity = capacity;
 
 		head = tail = -1;
 	}
 
-	public void push(T elm) {
+	// STANDARD OPERATIONS
+
+	@Override
+	public boolean add(T elm) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean remove(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		queue = new Object[capacity];
+		head = tail = -1;
+	}
+
+	// OPERATIONS ON THE QUEUE
+
+	public boolean push(T elm) {
 		// Move the tail
 		if (head == -1) {
 			// The queue is empty
 			head++;
 			tail++;
 
-		} else if (tail == size - 1) {
+		} else if (tail == capacity - 1) {
 			// The tail is at the end of the queue array
 			if (head != 0)
 				// If the tail is not at 0 we can loop back to the start
@@ -36,34 +60,43 @@ public class Queue<T> {
 			else {
 				// [head elm elm elm tail]
 				System.out.println(FULL_MSG);
-				return;
+				return false;
 			}
 
 		} else if (tail == head - 1) {
 			// [elm tail head elm elm]
 			System.out.println(FULL_MSG);
-			return;
+			return false;
 		} else
 			tail++;
 
 		// Add the element
 		queue[tail] = elm;
+		return true;
 	}
 
-	public T pop() {
+	public T peek() {
 		if (head == -1) {
 			// The queue is empty
 			System.out.println(EMPTY_MSG);
 			return null;
 		}
 
-		T popped = queue[head];
+		@SuppressWarnings("unchecked")
+		T peeked = (T) queue[head];
+
+		return peeked;
+	}
+
+	public T pop() {
+		T popped = peek();
 
 		// Move the head
 		if (head == tail)
+			// The queue is being emptied
 			head = tail = -1;
 
-		else if (head == size - 1)
+		else if (head == capacity - 1)
 			// [elm elm tail _ head] -> [head elm tail _ _]
 			head = 0;
 
@@ -73,8 +106,65 @@ public class Queue<T> {
 		return popped;
 	}
 
-	public T[] getOrderedQueue() {
-		T[] orderedQueue = (T[]) new Object[size];
+	// INFOS
+
+	public boolean isEmpty() {
+		return head == -1;
+	}
+
+	public int size() {
+		return capacity;
+	}
+
+	public int remainingCapacity() {
+		int elmNum = 0;
+
+		if (head == -1)
+			// Empty!
+			elmNum = 0;
+
+		else if (head < tail)
+			// [_ head elm elm elm tail _]
+			elmNum = tail - head + 1;
+
+		else if (head > tail)
+			// [elm elm tail _ _ head elm]
+			elmNum = capacity - head + tail + 1;
+
+		else
+			// [_ head/tail _ _ _ _ _ ]
+			elmNum = 1;
+
+		return capacity - elmNum;
+	}
+
+	public boolean contains(Object obj) {
+		if (obj == null)
+			return false;
+
+		for (int i = head; i < capacity; i++) {
+			if (queue[i].equals(obj))
+				return true;
+			else if (i == tail)
+				// End of queue reached
+				return false;
+		}
+
+		// The previous for-loop ended without finding either
+		// the obj or the tail. We are in this case:
+		// [ elm obj? elm tail _ _ _ head elm elm ]
+		for (int i = 0; i <= tail; i++) {
+			if (queue[i].equals(obj))
+				return true;
+		}
+
+		return false;
+	}
+
+	// CONVERSIONS
+
+	public Object[] toArray() {
+		Object[] orderedQueue = new Object[capacity - remainingCapacity()];
 
 		// Queue example
 		// [elm tail _ head elm elm elm ]
@@ -84,7 +174,7 @@ public class Queue<T> {
 
 		// Copy the elments of the queue starting from the head
 		// -> [head elm elm elm ]
-		for (int i = head; i < size; i++) {
+		for (int i = head; i < capacity; i++) {
 			orderedQueue[j] = queue[i];
 			j++;
 
@@ -105,22 +195,44 @@ public class Queue<T> {
 			}
 		}
 
-		// There were empty elments in the queue
-		// Create a new vector with the correct dimension
-		// [head elm elm elm elm tail _] -> [head elm elm elm elm tail]
-		if (j < size) {
-			T[] reduced = (T[]) new Object[j];
-			for (int i = 0; i < j; i++) {
-				reduced[i] = orderedQueue[i];
+		return orderedQueue;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T[] toArray(T[] orderedQueue) {
+		orderedQueue = (T[]) Array.newInstance(orderedQueue.getClass().getComponentType(),
+				capacity - remainingCapacity());
+
+		// Queue example
+		// [elm tail _ head elm elm elm ]
+
+		boolean tailReached = false;
+		int j = 0; // Index of the new array
+
+		// Copy the elments of the queue starting from the head
+		// -> [head elm elm elm ]
+		for (int i = head; i < capacity; i++) {
+			orderedQueue[j] = (T) queue[i];
+			j++;
+
+			// This is the simple case in which the tail is after
+			// the head -> [head elm elm tail _ _]
+			if (i == tail) {
+				tailReached = true;
+				break;
 			}
-			orderedQueue = reduced;
+		}
+
+		// Adding the remaining elments starting from 0
+		// -> [head elm elm elm ] + [elm tail]
+		if (!tailReached) {
+			for (int i = 0; i <= tail; i++) {
+				orderedQueue[j] = (T) queue[i];
+				j++;
+			}
 		}
 
 		return orderedQueue;
-	}
-	
-	public void print() {
-		System.out.println(this);
 	}
 
 	@Override
@@ -129,9 +241,9 @@ public class Queue<T> {
 			return "[]";
 		
 		else {
-			T[] orderedQueue = getOrderedQueue();
+			Object[] orderedQueue = toArray();
 			String str = "[ ";
-			for (T elm : orderedQueue) {
+			for (Object elm : orderedQueue) {
 				str += (elm + " ");
 			}
 			str += "]";
@@ -139,6 +251,8 @@ public class Queue<T> {
 		}
 	}
 	
+	// EQUALS AND CLONE
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -147,12 +261,13 @@ public class Queue<T> {
 		if (o == null || !getClass().equals(o.getClass()))
 			return false;
 		
+		@SuppressWarnings("unchecked")
 		Queue<T> q = (Queue<T>) o;
 		
-		if (size != q.size || head != q.head || tail != q.tail)
+		if (capacity != q.capacity || head != q.head || tail != q.tail)
 			return false;
 		
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < capacity; i++) {
 			if (queue[i] != q.queue[i])
 				return false;
 		}
@@ -162,7 +277,7 @@ public class Queue<T> {
 	@Override
 	public int hashCode() {
 		int hash = 3;
-		hash = 5*hash + size;
+		hash = 5 * hash + capacity;
 		hash = 5*hash + head;
 		hash = 5*hash + tail;
 		hash = 5*hash + Arrays.deepHashCode(queue);
@@ -172,6 +287,7 @@ public class Queue<T> {
 	@Override
 	public Object clone() {
 		try {
+			@SuppressWarnings("unchecked")
 			Queue<T> q = (Queue<T>) super.clone();
 			
 			q.queue = queue.clone();
@@ -181,5 +297,6 @@ public class Queue<T> {
 			throw new InternalError(e.toString());
 		}
 	}
+
 
 }

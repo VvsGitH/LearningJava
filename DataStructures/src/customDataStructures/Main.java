@@ -142,9 +142,29 @@ public class Main {
 
 		System.out.println(queue + ", " + queue.remainingCapacity());
 	}
+	
+	public static void queueDemo2() {
+		Queue<String> queue = new Queue<>(6);
+		queue.push("elm1");
+		queue.push("elm2");
+		queue.push("elm3");
+		queue.push("elm4");
+		queue.push("elm5");
+		queue.push("elm6");
+		System.out.println(queue.toString(false));
+		
+		Queue<String> queue2 = new Queue<>(4);
+		queue.drainTo(queue2);
+		System.out.println(queue2);
+		
+		ArrayList<String> arr = new ArrayList<>(6);
+		queue.drainTo(arr);
+		System.out.println(arr);
+	}
 
 	public static void main(String[] args) {
 		// arrayListDemo();
-		queueDemo();
+		// queueDemo();
+		queueDemo2();
 	}
 }

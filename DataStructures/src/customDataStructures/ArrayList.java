@@ -50,6 +50,7 @@ public class ArrayList<T> implements Collection<T> {
 	// ADDING ELEMENTS
 	//
 
+	@Override
 	public boolean add(T elm) {
 		if (elm == null)
 			throw new NullPointerException();
@@ -175,6 +176,7 @@ public class ArrayList<T> implements Collection<T> {
 		return removed;
 	}
 
+	@Override
 	public boolean remove(Object obj) {
 		int rmIndx = indexOf(obj);
 
@@ -187,6 +189,7 @@ public class ArrayList<T> implements Collection<T> {
 		}
 	}
 
+	@Override
 	public void clear() {
 		arr = new Object[1];
 		capacity = 1;
@@ -197,6 +200,7 @@ public class ArrayList<T> implements Collection<T> {
 	// SEARCHING
 	//
 
+	@Override
 	public boolean contains(Object obj) {
 		if (obj == null)
 			return false;
@@ -281,10 +285,12 @@ public class ArrayList<T> implements Collection<T> {
 		}
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return length == 0;
 	}
 
+	@Override
 	public int size() {
 		return length;
 	}
@@ -341,10 +347,12 @@ public class ArrayList<T> implements Collection<T> {
 	// CONVERSION
 	//
 
+	@Override
 	public Object[] toArray() {
 		return Arrays.copyOf(arr, length);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public T[] toArray(T[] a) {
 		if (a == null)

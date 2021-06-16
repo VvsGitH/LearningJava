@@ -26,14 +26,51 @@ public class Queue<T> implements Collection<T> {
 
 	@Override
 	public boolean add(T elm) {
-		// TODO Auto-generated method stub
-		return false;
+		if (push(elm))
+			return true;
+		else
+			throw new IllegalStateException("Fail to add new element to the queue.");
 	}
 
 	@Override
 	public boolean remove(Object obj) {
-		// TODO Auto-generated method stub
-		return false;
+		int rmIndx = indexOf(obj);
+		
+		if (rmIndx == -1)
+			return false;
+		
+		else if (rmIndx == head) {
+			pop();
+			return true;
+		}
+		
+		else if (rmIndx != tail) {
+			if (tail > head || rmIndx < head)
+				// [ _ head elm elm rmIndx elm elm tail _]
+				// or [ elm rmIndx tail _ _ head elm elm elm]
+				for (int i = rmIndx; i < tail; i++ )
+					queue[i] = queue[i + 1];
+			else {
+				// tail < head && rmIndx > head
+				// [ elm elm tail _ _ head rmIndx elm elm ]
+				for (int i = rmIndx; i < capacity - 1; i++)
+					queue[i] = queue[i+1];
+				queue[capacity -1] = queue[0];
+				for (int i = 0; i < tail; i++)
+					queue[i] = queue[i+1];					
+			}
+		} 
+
+		// else if (rmIndx == tail)
+		// 	DO NOTHING -> just move the tail
+		
+		// Moving the tail bw
+		if (tail == 0)
+			tail = capacity - 1;
+		else
+			tail--;
+		
+		return true;
 	}
 
 	@Override
@@ -105,13 +142,34 @@ public class Queue<T> implements Collection<T> {
 
 		return popped;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public int drainTo(Collection<? super T> coll) {
+		if (coll == null)
+			return -1;
+		
+		int transferedElms = 0;
+		
+		for (int i = 0; i < size() - remainingCapacity(); i++)
+			try {
+				coll.add((T) queue[i]);
+				transferedElms++;
+			} catch (Exception e) {
+				System.out.println(e);
+				break;
+			}
+			
+		return transferedElms;
+	}
 
 	// INFOS
 
+	@Override
 	public boolean isEmpty() {
 		return head == -1;
 	}
 
+	@Override
 	public int size() {
 		return capacity;
 	}
@@ -138,31 +196,39 @@ public class Queue<T> implements Collection<T> {
 		return capacity - elmNum;
 	}
 
+	@Override
 	public boolean contains(Object obj) {
-		if (obj == null)
+		if (indexOf(obj) == -1)
 			return false;
-
+		else
+			return true;
+	}
+	
+	private int indexOf(Object obj) {
+		if (obj == null)
+			return -1;
+		
 		for (int i = head; i < capacity; i++) {
-			if (queue[i].equals(obj))
-				return true;
+			if (queue[i].equals(obj)) 
+				return i;
 			else if (i == tail)
 				// End of queue reached
-				return false;
+				return -1;
 		}
 
 		// The previous for-loop ended without finding either
 		// the obj or the tail. We are in this case:
 		// [ elm obj? elm tail _ _ _ head elm elm ]
-		for (int i = 0; i <= tail; i++) {
-			if (queue[i].equals(obj))
-				return true;
-		}
-
-		return false;
+		for (int i = 0; i <= tail; i++)
+			if (queue[i].equals(obj)) 
+				return i;
+		
+		return -1;
 	}
 
 	// CONVERSIONS
 
+	@Override
 	public Object[] toArray() {
 		Object[] orderedQueue = new Object[capacity - remainingCapacity()];
 
@@ -198,6 +264,7 @@ public class Queue<T> implements Collection<T> {
 		return orderedQueue;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public T[] toArray(T[] orderedQueue) {
 		orderedQueue = (T[]) Array.newInstance(orderedQueue.getClass().getComponentType(),
@@ -251,6 +318,29 @@ public class Queue<T> implements Collection<T> {
 		}
 	}
 	
+	public String toString(boolean ordered) {
+		if (ordered)
+			return toString();
+		
+		else {
+			String str = "[ ";
+			for (int i = 0; i < capacity; i++) {
+				if ( i == head)
+					str += ("head:" + queue[i] + " ");
+				else if ( i == tail)
+					str += ("tail:" + queue[i] + " ");
+				else if ( tail > head && (i > head && i < tail)) 
+					str += (queue[i] + " ");
+				else if ( tail < head && (i > head || i < tail))
+					str += (queue[i] + " ");
+				else
+					str += "_ ";
+			}
+			str += "]";
+			return str;
+		}
+	}
+	
 	// EQUALS AND CLONE
 
 	@Override
@@ -297,6 +387,5 @@ public class Queue<T> implements Collection<T> {
 			throw new InternalError(e.toString());
 		}
 	}
-
 
 }

@@ -57,7 +57,13 @@ public class MySQLConnection {
 		try {
 			ResultSetMetaData resMeta = rs.getMetaData();
 			int colsnum = resMeta.getColumnCount();
-			while (rs.next()) {
+
+			if (!rs.next()) {
+				System.out.println("No results found!");
+				return;
+			}
+
+			do {
 				for (int i=1; i <= colsnum; i++) {
 					System.out.println("	"
 							+ resMeta.getColumnName(i).toUpperCase()
@@ -65,7 +71,8 @@ public class MySQLConnection {
 							+ rs.getString(i));
 				}
 				System.out.println("------------------------------------");
-			}
+			} while (rs.next());
+
 		} catch (SQLException e) {
 			manageSqlException(e);
 		}		

@@ -1,4 +1,4 @@
-
+package firstExample;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,22 +11,22 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
-@WebFilter("/servlet")
-public class CounterFilter implements Filter {
-
-	static int count = 0;
+@WebFilter(filterName = "filter1", urlPatterns = "/servlet")
+public class FilterLifeCycle implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		PrintWriter out = response.getWriter();
-		out.print("<p>Total Visitors: " + ++count + "</p>\n");
+		out.print("<p>Filter1 is invoked before</p>\n");
 
+		// Sends request to next resource
+		// It could be another filter or a servlet
 		chain.doFilter(request, response);
 
-		out.print("<p>Filter is invoked after</p>\n");
-		out.close();
-	}
+		out.print("<p>Filter1 is invoked after</p>\n");
+		// out.close();
 
+	}
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		// TODO Auto-generated method stub

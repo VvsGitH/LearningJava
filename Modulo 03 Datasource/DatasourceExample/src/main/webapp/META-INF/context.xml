@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Context path="/sakila">
+	<ResourceLink global="jdbc/sakila" name="jdbc/sakila"   type="javax.sql.DataSource">
+	</ResourceLink>
+</Context>

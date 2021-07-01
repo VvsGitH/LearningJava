@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>JsonPlaceholderServlet</name>
+	<name>HelloJEEWorld</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -28,4 +28,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/main/webapp/WEB-INF/lib/jstl-1.2.jar</name>
+			<type>1</type>
+			<location>C:/Users/vspap/.m2/repository/javax/servlet/jstl/1.2/jstl-1.2.jar</location>
+		</link>
+	</linkedResources>
 </projectDescription>
